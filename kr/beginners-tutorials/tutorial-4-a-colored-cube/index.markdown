@@ -81,14 +81,14 @@ glDrawArrays(GL_TRIANGLES, 0, 12*3); // 12*3 indices starting at 0 -> 12 triangl
 
 이제 흰 바탕에 육면체를 그리는데 필효한 것은 다 준비 되었습니다. 쉐이더를 써보세요! 쫄지말고 한번 시도해 보세요. ^^
 
-# Adding colors
+# 색상 추가하기
 
-A color is, conceptually, exactly the same as a position : it's just data. In OpenGL terms, they are "attributes". As a matter of fact, we already used this with glEnableVertexAttribArray() and glVertexAttribPointer(). Let's add another attribute. The code is going to be very similar.
+색상이란건 위치개념과 동일합니다 : 그저 데이터일 뿐이죠. OpenGL에서는 "Attribute(속성)"라고 불리죠. 어찌됐든, 우리는 glEnableVertexAttribArray()와 glVertexAttribPointer() 함수를 통해 Attribute를 다뤄본 적이 있습니다. 이제 또 다른 Attribute를 추가해봅시다. 삼각형 그리기와 코드는 유사합니다.
 
-First, declare your colors : one RGB triplet per vertex. Here I generated some randomly, so the result won't look that good, but you can do something better, for instance by copying the vertex's position into its own color.
+우선, 색상을 정의해봅시다 : 색상값은 한 Vertex(점)에 3가지 값(RGB)을 가집니다. 임의의 색상 값을 드리겠습니다, 임의의 값이라 결과는 그리 예쁘진 않을겁니다, 하지만 Vertex 위치를 복제하여 색상 값으로 바꾸는 단순한 작업만으로도 괜찮아 보이는 결과물을 만들어 낼 것입니다.
 
 ``` cpp
-// One color for each vertex. They were generated randomly.
+// Vertex 당 하나의 색상입니다. 임의로 생성했습니다.
 static const GLfloat g_color_buffer_data[] = {
     0.583f,  0.771f,  0.014f,
     0.609f,  0.115f,  0.436f,
@@ -129,7 +129,7 @@ static const GLfloat g_color_buffer_data[] = {
 };
 ```
 
-The buffer is created, bound and filled in the exact same way as the previous one :
+Buffer(버퍼)가 생성되었습니다, 바인딩(glBindBuffer()) 후 값을 채워넣는 것(glBufferData) 까지 이전 단계와 동일하게 작업하면 됩니다 :
 
 ``` cpp
 GLuint colorbuffer;
@@ -138,19 +138,19 @@ glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
 glBufferData(GL_ARRAY_BUFFER, sizeof(g_color_buffer_data), g_color_buffer_data, GL_STATIC_DRAW);
 ```
 
-The configuration is also identical :
+설정 또한 동일 합니다 :
 
 ``` cpp
 // 2nd attribute buffer : colors
 glEnableVertexAttribArray(1);
 glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
 glVertexAttribPointer(
-    1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
-    3,                                // size
-    GL_FLOAT,                         // type
-    GL_FALSE,                         // normalized?
-    0,                                // stride
-    (void*)0                          // array buffer offset
+    1,                                // attribute(속성). 1로 지정한건 따로 이유가 없습니다만, 반드시 버텍스 쉐이더의 layout(레이아웃)에 맞춰 지정해야합니다.
+    3,                                // size(크기(R,G,B))
+    GL_FLOAT,                         // type(데이터 타입)
+    GL_FALSE,                         // normalized?(정규화 여부, 이미 0~1 사이로 정규화 된 값이므로 GL_FALSE를 전송합니다)
+    0,                                // stride(각 데이터 묶음(R,G,B) 사이에 여백크기 입니다. 연속된 정보이므로 0 입니다)
+    (void*)0                          // array buffer offset(데이터 버퍼 배열의 오프셋, 데이터가 바로 시작되므로 0 입니다)
 );
 ```
 
